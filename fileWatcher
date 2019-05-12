@@ -1,0 +1,41 @@
+package sendemail;
+
+import java.nio.file.*;
+import java.util.*;
+
+/**
+ *
+ * @author Marius Evans
+ */
+public class fileWatcher {
+    public static void main(String[]args)
+    {
+        System.out.println("Running...");
+        //define a folder root
+        final Path myDir = FileSystems.getDefault().getPath(System.getProperty("user.home"), "Desktop"); //DIRECTORY
+
+        try {
+           WatchService watcher = myDir.getFileSystem().newWatchService();
+           myDir.register(watcher, StandardWatchEventKinds.ENTRY_MODIFY);
+
+           WatchKey watckKey = watcher.take();
+           List<WatchEvent<?>> events = watckKey.pollEvents();
+           for (WatchEvent event : events) {
+                
+                //ADD EVENTS HERE
+                if (event.kind() == StandardWatchEventKinds.ENTRY_MODIFY) {
+                    System.out.println("Modify: " + event.context().toString());
+                    final Path changed = (Path) event.context();
+                                   
+                    //CHECK IF SINGLE FILE HAS BEEN MODIFIED
+                    if (changed.endsWith("myFile.txt")) {
+                        System.out.println("My file has changed");
+                    }
+                }
+            }
+           
+        } catch (Exception e) {
+            System.out.println("Error: " + e.toString());
+        }
+    }
+}

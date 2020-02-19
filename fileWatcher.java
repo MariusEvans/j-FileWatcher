@@ -1,5 +1,3 @@
-package sendemail;
-
 import java.awt.Image;
 import java.awt.SystemTray;
 import java.awt.Toolkit;
